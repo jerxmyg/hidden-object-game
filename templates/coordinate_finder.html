@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinate Finder - Hidden Object Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f5f0e8 0%, #e8dfd0 50%, #d4c4b0 100%);
+            padding: 20px;
+            color: #3d2f28;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #6b3e3e;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+        
+        .instructions {
+            background: rgba(255, 255, 255, 0.6);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(107, 62, 62, 0.2);
+        }
+        
+        .instructions h3 {
+            color: #6b3e3e;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ol {
+            margin-left: 25px;
+            line-height: 1.8;
+        }
+        
+        .upload-area {
+            background: rgba(255, 255, 255, 0.6);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 2px dashed #c9967a;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-area:hover {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: #6b3e3e;
+        }
+        
+        .upload-area.dragover {
+            background: rgba(201, 150, 122, 0.3);
+            border-color: #6b3e3e;
+        }
+        
+        #imageContainer {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+            margin: 20px auto;
+            display: none;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        #uploadedImage {
+            max-width: 100%;
+            display: block;
+            cursor: crosshair;
+        }
+        
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+        
+        .coordinates-panel {
+            background: rgba(255, 255, 255, 0.6);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 2px solid rgba(107, 62, 62, 0.2);
+        }
+        
+        .coordinate-input {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(212, 196, 176, 0.5);
+        }
+        
+        .coordinate-input label {
+            display: block;
+            color: #6b3e3e;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .coordinate-input input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #d4c4b0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            background: white;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #c9967a 0%, #a87b5e 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(135deg, #d4a384 0%, #b8876a 100%);
+            transform: translateY(-2px);
+        }
+        
+        #output {
+            background: #2d2d2d;
+            color: #90EE90;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .marker {
+            position: absolute;
+            border: 3px solid #c9967a;
+            border-radius: 50%;
+            background: rgba(201, 150, 122, 0.25);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b3e3e;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .current-coords {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 25px;
+            border-radius: 10px;
+            border: 2px solid #c9967a;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Coordinate Finder Tool</h1>
+        
+        <div class="instructions">
+            <h3>How to Use:</h3>
+            <ol>
+                <li><strong>Upload your image:</strong> Click the upload area or drag and drop your atelier.jpg</li>
+                <li><strong>Click on objects:</strong> Click the center of each object you want to mark</li>
+                <li><strong>Name the object:</strong> Type the object name in the popup</li>
+                <li><strong>Adjust radius:</strong> Change the circle size if needed</li>
+                <li><strong>Copy the code:</strong> Click "Copy Code" to get the Python code for app.py</li>
+            </ol>
+        </div>
+        
+        <div class="upload-area" id="uploadArea">
+            <h3>📁 Click to Upload Image or Drag & Drop</h3>
+            <p>Upload your atelier.jpg file</p>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;">
+        </div>
+        
+        <div style="text-align: center;">
+            <div id="imageContainer">
+                <img id="uploadedImage" alt="Your image">
+                <canvas id="canvas"></canvas>
+            </div>
+        </div>
+        
+        <div class="coordinates-panel" id="coordsPanel" style="display: none;">
+            <h3>Marked Objects (<span id="objectCount">0</span>):</h3>
+            <div id="objectsList"></div>
+            
+            <button class="btn" onclick="undoLast()">↶ Undo Last</button>
+            <button class="btn" onclick="clearAll()">🗑 Clear All</button>
+            <button class="btn" onclick="copyCode()">📋 Copy Code for app.py</button>
+            
+            <div id="output"></div>
+        </div>
+        
+        <div class="current-coords" id="currentCoords" style="display: none;">
+            Hover to see coordinates
+        </div>
+    </div>
+    
+    <script>
+        let objects = [];
+        let img, canvas, ctx;
+        let imageContainer;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            img = document.getElementById('uploadedImage');
+            canvas = document.getElementById('canvas');
+            ctx = canvas.getContext('2d');
+            imageContainer = document.getElementById('imageContainer');
+            
+            uploadArea.onclick = () => fileInput.click();
+            
+            fileInput.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) loadImage(file);
+            };
+            
+            uploadArea.ondragover = (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            };
+            
+            uploadArea.ondragleave = () => {
+                uploadArea.classList.remove('dragover');
+            };
+            
+            uploadArea.ondrop = (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                if (file) loadImage(file);
+            };
+            
+            img.onclick = handleImageClick;
+            img.onmousemove = handleMouseMove;
+        });
+        
+        function loadImage(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                img.src = e.target.result;
+                img.onload = () => {
+                    imageContainer.style.display = 'inline-block';
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    document.getElementById('coordsPanel').style.display = 'block';
+                    document.getElementById('currentCoords').style.display = 'block';
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function handleMouseMove(e) {
+            const rect = img.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const xPercent = ((x / img.offsetWidth) * 100).toFixed(1);
+            const yPercent = ((y / img.offsetHeight) * 100).toFixed(1);
+            
+            document.getElementById('currentCoords').innerHTML = 
+                `X: ${xPercent}%<br>Y: ${yPercent}%`;
+        }
+        
+        function handleImageClick(e) {
+            const rect = img.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const xPercent = ((x / img.offsetWidth) * 100).toFixed(1);
+            const yPercent = ((y / img.offsetHeight) * 100).toFixed(1);
+            
+            const name = prompt('Enter object name:');
+            if (!name) return;
+            
+            const radius = prompt('Enter radius (default 3):', '3');
+            
+            const obj = {
+                name: name.toLowerCase(),
+                x: parseFloat(xPercent),
+                y: parseFloat(yPercent),
+                radius: parseFloat(radius) || 3
+            };
+            
+            objects.push(obj);
+            drawMarker(obj, objects.length);
+            updateList();
+        }
+        
+        function drawMarker(obj, index) {
+            const x = (obj.x / 100) * canvas.width;
+            const y = (obj.y / 100) * canvas.height;
+            const radius = (obj.radius / 100) * Math.min(canvas.width, canvas.height);
+            
+            ctx.strokeStyle = '#c9967a';
+            ctx.fillStyle = 'rgba(201, 150, 122, 0.25)';
+            ctx.lineWidth = 3;
+            
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.stroke();
+            
+            // Draw number
+            ctx.fillStyle = '#6b3e3e';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(index.toString(), x, y);
+        }
+        
+        function redrawAll() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            objects.forEach((obj, i) => drawMarker(obj, i + 1));
+        }
+        
+        function updateList() {
+            const list = document.getElementById('objectsList');
+            list.innerHTML = '';
+            
+            objects.forEach((obj, i) => {
+                const div = document.createElement('div');
+                div.className = 'coordinate-input';
+                div.innerHTML = `
+                    <label>${i + 1}. ${obj.name}</label>
+                    <input type="text" value='{"name": "${obj.name}", "x": ${obj.x}, "y": ${obj.y}, "radius": ${obj.radius}}' readonly>
+                `;
+                list.appendChild(div);
+            });
+            
+            document.getElementById('objectCount').textContent = objects.length;
+            updateOutput();
+        }
+        
+        function updateOutput() {
+            const code = `ALL_OBJECTS = [\n${objects.map(obj => 
+                `    {"name": "${obj.name}", "x": ${obj.x}, "y": ${obj.y}, "radius": ${obj.radius}}`
+            ).join(',\n')}\n]`;
+            
+            document.getElementById('output').textContent = code;
+        }
+        
+        function undoLast() {
+            objects.pop();
+            redrawAll();
+            updateList();
+        }
+        
+        function clearAll() {
+            if (confirm('Clear all markers?')) {
+                objects = [];
+                redrawAll();
+                updateList();
+            }
+        }
+        
+        function copyCode() {
+            const code = document.getElementById('output').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('✅ Code copied to clipboard! Paste it into app.py');
+            });
+        }
+    </script>
+</body>
+</html>

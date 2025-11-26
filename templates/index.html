@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Hidden Object Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🎄 Christmas Atelier - Hidden Object Game 🎄</h1>
+        
+        <div class="game-info">
+            <div class="score">
+                <span>Found: <span id="found-count">0</span>/5</span>
+            </div>
+            <button id="new-game-btn" class="btn">New Game</button>
+            <div id="timer">Time: <span id="time">0:00</span></div>
+        </div>
+
+        <div class="instructions">
+            <h3>How to Play:</h3>
+            <p>Click on the objects listed above in the Christmas atelier scene. Find all 5 objects as quickly as you can!</p>
+        </div>
+    
+        <div class="game-container">
+            <div id="game-area">
+                <img src="{{ url_for('static', filename='atelier.jpg') }}" alt="Christmas Atelier" id="game-image">
+                <canvas id="click-canvas"></canvas>
+                <div id="victory-message" class="hidden">
+                    <h2>🎉 Congratulations! 🎉</h2>
+                    <p>You found all objects!</p>
+                    <p>Time: <span id="final-time"></span></p>
+                    <button onclick="startNewGame()" class="btn">Play Again</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="objects-list">
+            <h3>Find these objects:</h3>
+            <ul id="object-list"></ul>
+        </div>
+
+
+
+    <script src="{{ url_for('static', filename='game.js') }}"></script>
+</body>
+</html>
