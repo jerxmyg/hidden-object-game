@@ -7,8 +7,60 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <header>
+        <div class="header-inner">
+          <div class="header-left desktop-only">
+            <nav>
+              <ul>
+                <li><a href="https://luc8k.com/pages/about-us">ABOUT</a></li>
+                <li><a href="https://luc8k.com/collections/all">COLLECTION</a></li>
+              </ul>
+            </nav>
+          </div>
+  
+          <div class="mobile-left mobile-only">
+            <button
+              id="mobile-toggle"
+              style="background: none; border: none; font-size: 24px"
+            >
+              ☰
+            </button>
+          </div>
+  
+          <a class="logolink" href="/">
+            <img
+              src="https://cdn.shopify.com/s/files/1/0581/4809/4052/files/Luc8k_9.png?v=1738851655"
+              class="logoimg"
+              alt="LUC8K"
+            />
+          </a>
+  
+          <div class="header-right desktop-only">
+            <nav>
+              <ul>
+                <li><a href="https://luc8k.com/blogs/general-news">STORIES</a></li>
+                <li><a href="https://luc8k.com/pages/contact">CONTACT</a></li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </header>
+      
+      <div id="mobile-menu" class="mobile-menu">
+        <button id="mobile-close" class="mobile-close">✕</button>
+  
+        <nav class="mobile-menu-nav">
+            <a href="https://luc8k.com/pages/about-us">ABOUT</a>
+            <a href="https://luc8k.com/collections/all">COLLECTION</a>
+            <a href="https://luc8k.com/blogs/general-news">STORIES</a>
+            <a href="https://luc8k.com/pages/contact">CONTACT</a>
+  
+          <a href="#" class="mobile-login"> <i class="far fa-user"></i> Login </a>
+        </nav>
+      </div>
+
     <div class="container">
-        <h1>🎄 LUC8K - Hidden Object Game 🎄</h1>
+        <h1>🎄 Hidden Object Game 🎄</h1>
         
         <div class="game-info">
             <div class="score">
@@ -40,9 +92,99 @@
             <h3>How to Play:</h3>
             <p>Click on the objects listed above in the Christmas atelier scene. Find all 5 objects as quickly as you can!</p>
         </div>
-
-
+    </div>
 
     <script src="{{ url_for('static', filename='game.js') }}"></script>
+
+    <footer class="custom-footer">
+        <div class="footer-top">
+          <div class="footer-column newsletter">
+            <h4>Join Our LUC8K Community</h4>
+            <form class="newsletter-form">
+              <input type="email" placeholder="Your e-mail" />
+              <label>
+                <input type="checkbox" />
+                I would like to receive the latest news from LUC8K
+              </label>
+            </form>
+          </div>
+
+          <div class="footer-column about-menu">
+            <h4>About The Brand</h4>
+            <ul>
+              <li><a href="https://luc8k.com/pages/the-founder">Founder</a></li>
+              <li><a href="https://luc8k.com/pages/friends-of-luc8k">Philosophy of LUC8K</a></li>
+              <li><a href="https://luc8k.com/pages/colors">Personalization</a></li>
+              <li><a href="https://luc8k.com/blogs/general-news">Stories</a></li>
+              <li><a href="https://luc8k.com/pages/customer-service">Responsible Luxury</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-column order-menu">
+            <h4>Order</h4>
+            <ul>
+              <li><a href="https://luc8k.com/pages/privacy-policy">Delivery & Returns</a></li>
+              <li><a href="https://luc8k.com/pages/customer-service">Customer Service</a></li>
+              <li><a href="https://luc8k.com/pages/privacy-policy">Privacy Policy</a></li>
+              <li><a href="https://luc8k.com/pages/terms-of-service">Terms of Service</a></li>
+              <li><a href="https://luc8k.com/pages/contact">Contact Us</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div class="footer-left">
+            <div class="footer-logo">
+              <img
+                src="https://cdn.shopify.com/s/files/1/0581/4809/4052/files/Luc8k_9.png"
+                alt="Footer Logo"
+              />
+            </div>
+
+            <div class="footer-social">
+              <span>Follow us on:</span>
+              <a href="https://www.facebook.com/luc8k/" target="_blank"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a href="https://www.instagram.com/luc8k/" target="_blank"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a href="https://ch.linkedin.com/company/luc8k" target="_blank"
+                ><i class="fab fa-linkedin-in"></i
+              ></a>
+              <a href="https://x.com/luc8k_com" target="_blank"
+                ><i class="fab fa-x-twitter"></i
+              ></a>
+            </div>
+          </div>
+
+          <div class="footer-copy">Copyright 2025, LUC8K Co.</div>
+        </div>
+    </footer>
+
+    <!-- FontAwesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <script>
+      // Mobile menu toggle
+      const mobileToggle = document.getElementById('mobile-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      const mobileClose = document.getElementById('mobile-close');
+
+      if (mobileToggle) {
+        mobileToggle.addEventListener('click', () => {
+          mobileMenu.classList.add('show');
+        });
+      }
+
+      if (mobileClose) {
+        mobileClose.addEventListener('click', () => {
+          mobileMenu.classList.remove('show');
+        });
+      }
+    </script>
 </body>
 </html>
