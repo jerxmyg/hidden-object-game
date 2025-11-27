@@ -60,7 +60,7 @@
       </div>
 
     <div class="container">
-        <h1>🎄 Hidden Object Game 🎄</h1>
+        <h1>🎄 Find the Hidden Magic 🎄</h1>
         
         <div class="game-info">
             <div class="score">
@@ -70,10 +70,19 @@
             <div id="timer">Time: <span id="time">0:00</span></div>
         </div>
 
+        <div class="instructions">
+          <h3>How to Play:</h3>
+          <p> Our traditional leather artisans have hidden 5 Christmas objects in this winter wonderland version of our atelier in France. Can you find them all? Click on each one you see to reveal a hidden message.
+            Discover more about how our artisans make all our bespoke bags at our Atelier in France by hand <a href="https://luc8k.com/pages/our-craftsmanship"><b>here</b></a>.
+          </p>
+      </div>
+
         <div class="objects-list">
             <h3>Find these objects:</h3>
             <ul id="object-list"></ul>
         </div>
+
+
     
         <div class="game-container">
             <div id="game-area">
@@ -88,10 +97,7 @@
             </div>
         </div>
 
-        <div class="instructions">
-            <h3>How to Play:</h3>
-            <p>Click on the objects listed above in the Christmas atelier scene. Find all 5 objects as quickly as you can!</p>
-        </div>
+
     </div>
 
     <script src="{{ url_for('static', filename='game.js') }}"></script>
