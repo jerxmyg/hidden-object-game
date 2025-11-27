@@ -21,7 +21,7 @@ current_game = None
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('day2_index.html')
 
 @app.route('/new_game')
 def new_game():
